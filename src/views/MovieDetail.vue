@@ -56,8 +56,7 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import api from '@/services/api';
 import MovieComments from '@/components/MovieComments.vue';
 
@@ -65,21 +64,11 @@ export default {
   name: 'MovieDetail',
   components: { MovieComments },
   setup() {
-    const store = useStore();
-    const router = useRouter();
     const route = useRoute();
     const movie = ref(null);
     const genres = ref([]);
     const crewMembers = ref([]);
     const error = ref('');
-
-    const checkAuth = () => {
-      if (!store.state.token) {
-        router.push('/login');
-        return false;
-      }
-      return true;
-    };
 
     const formatPoster = (poster) => {
       if (!poster) return 'https://via.placeholder.com/150x225?text=No+Image';
@@ -184,7 +173,6 @@ export default {
     };
 
     const fetchMovie = async () => {
-      if (!checkAuth()) return;
       try {
         const movieId = route.params.id;
         const response = await api.getMovie(movieId);

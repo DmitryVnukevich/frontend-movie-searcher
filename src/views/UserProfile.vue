@@ -135,7 +135,7 @@
             <label for="contentType">Тип контента</label>
             <select id="contentType" v-model="preferencesForm.contentTypePreference">
               <option value="MOVIE">Фильм</option>
-              <option value="TV_SERIES">Сериал</option>
+              <option value="SERIES">Сериал</option>
             </select>
           </div>
           <div class="form-group">

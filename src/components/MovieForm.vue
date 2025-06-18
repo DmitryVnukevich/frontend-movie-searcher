@@ -236,7 +236,7 @@ export default {
       })) || [],
     });
 
-    const ageRatings = ['G', 'PG', 'PG-13', 'R', 'NC-17'];
+    const ageRatings = ['G', 'PG', 'PG_13', 'R', 'NC_17'];
 
     const availableRoles = [
       { value: 'DIRECTOR', label: 'Режиссёр' },

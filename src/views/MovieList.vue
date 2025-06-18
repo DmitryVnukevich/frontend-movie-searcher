@@ -135,14 +135,6 @@ export default {
 
     const ageRatings = ref(['G', 'PG', 'PG-13', 'R', 'NC-17']);
 
-    const checkAuth = () => {
-      if (!store.state.token) {
-        router.push('/login');
-        return false;
-      }
-      return true;
-    };
-
     const fetchGenres = async () => {
       try {
         const response = await api.getGenres();
@@ -153,7 +145,6 @@ export default {
     };
 
     const fetchMovies = async (page) => {
-      if (!checkAuth()) return;
       isLoading.value = true;
       try {
         if (route.query.search) {
@@ -164,23 +155,17 @@ export default {
           movies.value = store.state.searchResults || [];
           currentPage.value = store.state.searchPage || page;
           totalPages.value = store.state.searchTotalPages || 1;
-          console.log('Search response:', {
-            results: store.state.searchResults,
-            page: store.state.searchPage,
-            totalPages: store.state.searchTotalPages,
-          });
         } else {
           const response = await api.getMovies(page, pageSize);
-          console.log('GetMovies response:', response.data);
           movies.value = response.data.content || [];
           currentPage.value = response.data.number || page;
-          totalPages.value = response.data.page.totalPages || 1;
+          totalPages.value = response.data.totalPages || 1;
         }
         error.value = '';
       } catch (err) {
         error.value = route.query.search
           ? 'Ошибка поиска фильмов. Проверьте запрос или подключение.'
-          : 'Ошибка загрузки фильмов. Проверьте подключение или авторизацию.';
+          : 'Ошибка загрузки фильмов. Проверьте подключение.';
         console.error('fetchMovies error:', err);
         movies.value = [];
       } finally {
@@ -228,14 +213,6 @@ export default {
 
     const filteredMovies = computed(() => {
       let filtered = route.query.search ? [...(store.state.searchResults || [])] : [...movies.value];
-      console.log('filteredMovies:', {
-        filtered,
-        selectedGenres: selectedGenres.value,
-        selectedAgeRating: selectedAgeRating.value,
-        yearFrom: yearFrom.value,
-        yearTo: yearTo.value,
-        sortBy: sortBy.value,
-      });
 
       if (selectedGenres.value.length > 0) {
         filtered = filtered.filter((movie) =>
